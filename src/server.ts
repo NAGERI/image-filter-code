@@ -45,12 +45,15 @@ import { cast } from "bluebird";
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send("Image Not Exist");
     }
+    timeout(60000);
+    // deleteLocalFiles([__dirname + "/util/tmp"]);
     res.status(StatusCodes.OK).sendFile(img);
-    deleteLocalFiles([__dirname + "\\util\\tmp"]);
   });
   /**************************************************************************** */
   //! END @TODO1
-
+  function timeout(ms: number) {
+    return new Promise((res) => setTimeout(res, ms));
+  }
   // Root Endpoint
   // Displays a simple message to the user
   app.get("/", async (req, res) => {
