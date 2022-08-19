@@ -15,6 +15,16 @@ import { cast } from "bluebird";
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
+  //CORS Should be restricted
+  app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:8082");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    next();
+  });
+
   app.use(logger("dev"));
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
@@ -30,8 +40,8 @@ import { cast } from "bluebird";
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
-  app.get("/filteredimage", async (req, res) => {
-    let { image_url } = req.query;
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    let { image_url }: { image_url: string } = req.query;
 
     if (!image_url) {
       return res.status(StatusCodes.BAD_REQUEST).send("Image URL is required");
@@ -43,7 +53,7 @@ import { cast } from "bluebird";
     if (!img) {
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send("Image Not Exist");
+        .send("Image filtering failed");
     }
     timeout(60000);
     // deleteLocalFiles([__dirname + "/util/tmp"]);
