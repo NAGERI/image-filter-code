@@ -56,8 +56,9 @@ import { cast } from "bluebird";
         .send("Image filtering failed");
     }
     timeout(60000);
-    // deleteLocalFiles([__dirname + "/util/tmp"]);
-    res.status(StatusCodes.OK).sendFile(img);
+    res.status(StatusCodes.OK).sendFile(img, () => {
+      deleteLocalFiles([img]);
+    });
   });
   /**************************************************************************** */
   //! END @TODO1
